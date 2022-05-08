@@ -1,13 +1,19 @@
 import { useEffect, useState } from "react";
 import { NoteInterface } from "../interfaces/interfaces";
+import dayjs from "dayjs";
 
 const Notes = () => {
     const [notes, setNotes] = useState([]);
 
     useEffect(() => {
-        fetch("api/notes")
+        const sixMonthsAgo = dayjs().subtract(6, "months");
+        const url = `api/notes?from=${sixMonthsAgo.format("YYYY-MM-DD")}`;
+
+        fetch(url)
             .then((res) => res.json())
-            .then((data) => setNotes(data));
+            .then((data) => {
+                setNotes(data);
+            });
     }, []);
 
     return (
