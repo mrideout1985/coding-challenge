@@ -1,23 +1,42 @@
 import { useEffect, useState } from "react";
 import { NoteInterface } from "../interfaces/interfaces";
+import { Switch } from "antd";
 import dayjs from "dayjs";
 
 const Notes = () => {
     const [notes, setNotes] = useState([]);
+    const [showAllNotes, setShowAllNotes] = useState(false);
 
     useEffect(() => {
+        const baseApi = "api/notes";
         const sixMonthsAgo = dayjs().subtract(6, "months");
-        const url = `api/notes?from=${sixMonthsAgo.format("YYYY-MM-DD")}`;
+        const filteredApi = `${baseApi}?from=${sixMonthsAgo.format(
+            "YYYY-MM-DD"
+        )}`;
 
-        fetch(url)
+        fetch(showAllNotes ? baseApi : filteredApi)
             .then((res) => res.json())
             .then((data) => {
                 setNotes(data);
             });
-    }, []);
+    }, [showAllNotes]);
+
+    const handleShowAllNotes = () => {
+        setShowAllNotes(!showAllNotes);
+    };
 
     return (
         <div>
+            <Switch onChange={handleShowAllNotes} />
+            <span>
+                {showAllNotes
+                    ? "Notes from the dawn of time.."
+                    : `Notes from ${dayjs()
+                          .subtract(6, "months")
+                          .format("YYYY-MM-DD")} until ${dayjs().format(
+                          "YYYY-MM-DD"
+                      )}`}
+            </span>
             <ul>
                 {notes.length > 0 ? (
                     notes.map((note: NoteInterface) => (

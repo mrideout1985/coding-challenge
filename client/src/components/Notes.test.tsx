@@ -1,7 +1,8 @@
-import { screen, render } from "@testing-library/react";
+import { screen, render, fireEvent } from "@testing-library/react";
 import { setupServer } from "msw/node";
 import { rest } from "msw";
 import { Notes } from "./Notes";
+import { Switch } from "antd";
 
 const server = setupServer(
     rest.get("api/notes", (_, res, ctx) => {
@@ -23,13 +24,25 @@ afterEach(() => server.resetHandlers());
 afterAll(() => server.close());
 
 describe("Notes", () => {
-    it("renders notes", async () => {
+    it("notes from past 6 months displayed by default", async () => {
         render(<Notes />);
 
         const listItems = await screen.findAllByRole("listitem");
         const note = screen.getByText(/Sit iusto odit/i);
+        const toggleSwitch = screen.getByRole("switch");
 
         expect(listItems).toHaveLength(1);
         expect(note).toBeInTheDocument();
+        expect(toggleSwitch).toHaveAttribute("aria-checked", "false");
+    });
+
+    it("can click switch to toggle notes", () => {
+        render(<Notes />);
+
+        const toggleSwitch = screen.getByRole("switch");
+
+        fireEvent.click(toggleSwitch);
+
+        expect(toggleSwitch).toHaveAttribute("aria-checked", "true");
     });
 });
