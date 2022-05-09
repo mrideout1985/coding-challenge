@@ -13,7 +13,7 @@ const AddNoteModal = ({
     setShowModal,
     getNotes,
 }: AddNoteModalInterface) => {
-    const { register, handleSubmit, getValues } = useForm();
+    const { register, handleSubmit, getValues, reset } = useForm();
 
     const onAddNote = () => {
         try {
@@ -27,6 +27,7 @@ const AddNoteModal = ({
         } finally {
             setShowModal(false);
             getNotes();
+            reset();
         }
     };
 
