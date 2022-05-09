@@ -2,7 +2,6 @@ import { screen, render, fireEvent } from "@testing-library/react";
 import { setupServer } from "msw/node";
 import { rest } from "msw";
 import { Notes } from "./Notes";
-import { Switch } from "antd";
 
 const server = setupServer(
     rest.get("api/notes", (_, res, ctx) => {
@@ -44,5 +43,17 @@ describe("Notes", () => {
         fireEvent.click(toggleSwitch);
 
         expect(toggleSwitch).toHaveAttribute("aria-checked", "true");
+    });
+
+    it("opens modal when add note button is clicked", async () => {
+        render(<Notes />);
+
+        const addNoteButton = screen.getByRole("button", { name: /add note/i });
+
+        fireEvent.click(addNoteButton);
+
+        const addNoteModal = await screen.findByRole("dialog");
+
+        expect(addNoteModal).toBeInTheDocument();
     });
 });

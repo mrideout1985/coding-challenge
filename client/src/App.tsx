@@ -1,5 +1,5 @@
 import "./App.css";
-import { Notes } from "./components/Notes";
+import { Notes } from "./components/notes/Notes";
 
 function App() {
     return (
