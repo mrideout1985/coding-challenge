@@ -1,5 +1,5 @@
-import { Modal } from "antd";
 import React from "react";
+import { Modal } from "antd";
 import { useForm } from "react-hook-form";
 
 interface AddNoteModalInterface {
@@ -13,7 +13,13 @@ const AddNoteModal = ({
     setShowModal,
     getNotes,
 }: AddNoteModalInterface) => {
-    const { register, handleSubmit, getValues, reset } = useForm();
+    const {
+        register,
+        handleSubmit,
+        getValues,
+        reset,
+        formState: { errors },
+    } = useForm();
 
     const onAddNote = () => {
         try {
@@ -34,13 +40,29 @@ const AddNoteModal = ({
     return (
         <Modal
             onCancel={() => setShowModal(false)}
-            onOk={onAddNote}
             title="Basic Modal"
             visible={showModal}
+            footer={null}
         >
             <>
-                <form onSubmit={handleSubmit(onAddNote)}>
-                    <input {...register("note")} />
+                <form data-testid="form" onSubmit={handleSubmit(onAddNote)}>
+                    <input
+                        {...register("note", {
+                            required: "Note is required",
+                            maxLength: {
+                                value: 500,
+                                message: "Cannot be more than 500 characters",
+                            },
+                        })}
+                    />
+                    <span data-testid="errors">
+                        {errors.note && errors.note.message}
+                    </span>
+                    <input
+                        data-testid="submit"
+                        type="submit"
+                        value="add note"
+                    />
                 </form>
             </>
         </Modal>
