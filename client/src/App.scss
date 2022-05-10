@@ -1,0 +1,16 @@
+@import "~antd/dist/antd.css";
+@import url("https://fonts.googleapis.com/css2?family=Roboto&display=swap");
+
+.app {
+    background-color: #fafafa;
+    margin: 0 1rem;
+    font-family: "Roboto", sans-serif;
+
+    > header {
+        h1 {
+            font-size: 2.5em;
+            font-weight: bolder;
+            text-align: center;
+        }
+    }
+}

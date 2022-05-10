@@ -1,10 +1,12 @@
-import "./App.css";
+import "./App.scss";
 import { Notes } from "./components/notes/Notes";
 
 function App() {
     return (
-        <div>
-            <h1>Notes App</h1>
+        <div className="app">
+            <header>
+                <h1>Notes App</h1>
+            </header>
             <Notes />
         </div>
     );

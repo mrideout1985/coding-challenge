@@ -1,8 +1,9 @@
-import { useEffect, useState, useCallback } from "react";
-import { Switch } from "antd";
-import dayjs from "dayjs";
-import { NoteInterface } from "../../interfaces/interfaces";
 import { AddNoteModal } from "../modals/AddNoteModal";
+import { NoteInterface } from "../../interfaces/interfaces";
+import { Switch } from "antd";
+import { useEffect, useState, useCallback } from "react";
+import dayjs from "dayjs";
+import styles from "./Notes.module.scss";
 
 const Notes = () => {
     const [notes, setNotes] = useState([]);
@@ -32,33 +33,43 @@ const Notes = () => {
     };
 
     return (
-        <div>
-            <Switch onChange={handleShowAllNotes} />
-            <button onClick={() => setShowModal(true)}>Add Note</button>
+        <>
             <AddNoteModal
                 getNotes={getNotes}
                 setShowModal={setShowModal}
                 showModal={showModal}
             />
-            <span>
-                {showAllNotes
-                    ? "Notes from the dawn of time.."
-                    : `Notes from ${dayjs()
-                          .subtract(6, "months")
-                          .format("YYYY-MM-DD")} until ${dayjs().format(
-                          "YYYY-MM-DD"
-                      )}`}
-            </span>
-            <ul>
-                {notes.length > 0 ? (
-                    notes.map((note: NoteInterface) => (
-                        <li key={note.id}>{note.note}</li>
-                    ))
-                ) : (
-                    <span>No Notes</span>
-                )}
-            </ul>
-        </div>
+            <div className={styles["container"]}>
+                <div className={styles["toggle"]}>
+                    <button type="button" onClick={() => setShowModal(true)}>
+                        Add note
+                    </button>
+                    <Switch onChange={handleShowAllNotes} />
+                </div>
+                <section className={styles["notes"]}>
+                    <span className={styles["timeframe"]}>
+                        {showAllNotes
+                            ? "All notes"
+                            : `Notes from ${dayjs()
+                                  .subtract(6, "months")
+                                  .format("YYYY/MM/DD")} - ${dayjs().format(
+                                  "YYYY/MM/DD"
+                              )}`}
+                    </span>
+                    <ul>
+                        {notes.length > 0 ? (
+                            notes.map((note: NoteInterface) => (
+                                <li key={note.id}>
+                                    <div>{note.note}</div>
+                                </li>
+                            ))
+                        ) : (
+                            <span>No Notes</span>
+                        )}
+                    </ul>
+                </section>
+            </div>
+        </>
     );
 };
 

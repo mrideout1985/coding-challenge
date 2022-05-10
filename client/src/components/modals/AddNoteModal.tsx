@@ -1,6 +1,7 @@
 import React from "react";
 import { Modal } from "antd";
 import { useForm } from "react-hook-form";
+import styles from "./AddNoteModal.module.scss";
 
 interface AddNoteModalInterface {
     showModal: boolean;
@@ -37,32 +38,46 @@ const AddNoteModal = ({
         }
     };
 
+    const handleCancel = () => {
+        setShowModal(false);
+        reset();
+    };
+
     return (
         <Modal
-            onCancel={() => setShowModal(false)}
-            title="Basic Modal"
+            onCancel={handleCancel}
+            title="Add note"
             visible={showModal}
             footer={null}
+            className={styles["modal"]}
         >
             <>
-                <form data-testid="form" onSubmit={handleSubmit(onAddNote)}>
-                    <input
-                        {...register("note", {
-                            required: "Note is required",
-                            maxLength: {
-                                value: 500,
-                                message: "Cannot be more than 500 characters",
-                            },
-                        })}
-                    />
-                    <span data-testid="errors">
+                <form
+                    className={styles["form"]}
+                    data-testid="form"
+                    onSubmit={handleSubmit(onAddNote)}
+                >
+                    <div className={styles["inputs"]}>
+                        <input
+                            type="text"
+                            {...register("note", {
+                                required: "Note is required",
+                                maxLength: {
+                                    value: 500,
+                                    message:
+                                        "Cannot be more than 500 characters",
+                                },
+                            })}
+                        />
+                        <input
+                            data-testid="submit"
+                            type="submit"
+                            value="add note"
+                        />
+                    </div>
+                    <span className={styles["errors"]} data-testid="errors">
                         {errors.note && errors.note.message}
                     </span>
-                    <input
-                        data-testid="submit"
-                        type="submit"
-                        value="add note"
-                    />
                 </form>
             </>
         </Modal>
